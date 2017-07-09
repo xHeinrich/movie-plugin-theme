@@ -11,15 +11,20 @@
 ?>
 <div class="movie-post">
   <div class="row">
-       <div class="col-md-4 push-md-1">
-            <img style="media-object img-responsive" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
+       <div class="col-md-4">
+            <img class="media-object img-responsive img-sm-center" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
             <div class="form-group">
                 &nbsp;
             </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-7 text-sm-center">
+            <?php
+            /**
+             * output the base movie info including title, releasee date and genres
+             */
+            ?>
             <h3><?php the_title(); ?></h3>
-            <h5><?php echo get_post_meta( get_the_ID(), '_movies_release_date', true) . '</br>'; ?></h5>
+            <h4><?php echo date('Y',get_post_meta( get_the_ID(), '_movies_release_date', true)) . '</br>'; ?></h4>
             <h4><?php
                       $terms = get_terms( array(
                             'taxonomy' => 'genre',
@@ -53,13 +58,13 @@
           $characters = get_characters( implode(',', get_post_meta(get_the_ID(), '_movies_characters')));
           $actors = get_actors($characters);
           ?>
-          <div class="col-md-6">
+          <div class="col-md-6 text-sm-center">
               <h3>Cast</h3>
                 <?php foreach($actors->posts as $actor){
                   //actors portrait
                   $portrait = get_post_meta( $actor->ID, '_actors_image', true);
                   echo '<div class="col-md-12"><div class="col-md-3 ">';
-                  echo '<img class="media-object img-responsive img-circle" src="' . $portrait . '"/>';
+                  echo '<img class="media-object img-responsive img-sm-center actor-img" src="' . $portrait . '"/>';
                   echo '</div>';
                   echo '<div class="col-md-6 col-md-push-3">';
                   echo '<p>' . get_post_meta($actor->ID, '_actors_name', true) . '</p>';
@@ -78,12 +83,14 @@
           <!-- related movies and cast -->
 
           <row>
-            <div class="col-md-12">
+            <div class="col-md-12 text-sm-center">
+              <h3>Related Movies</h3>
               <?php
-              /** output 3 related movies **/
-                  //for use in the loop, list 5 post titles related to first tag on current post
+                  /**
+                   * output 3 related movies
+                   */
                   global $post;
-
+                  //grab all taxonomies related to the post
                   $taxonomy_names = get_object_taxonomies( $post );
                   $category = $taxonomy_names[0];
                   $custom_terms = get_terms($category);
@@ -111,13 +118,12 @@
                           while($loop->have_posts()) : $loop->the_post();
                           echo '
                           <a href="'.get_permalink().'" class="col-lg-3">
-                            <div class="panel">
-                               <div class="panel-heading"><strong>'. get_post_meta( get_the_ID(), '_movies_name', true) . '</strong></div>
+                            <div class="panel div-sm-center">
+                               <div class="panel-heading text-sm-center"><strong>'. get_post_meta( get_the_ID(), '_movies_name', true) . '</strong></div>
                                <div class="panel-body">
 
                                <div class="boximg">
-                                <img src="' . get_post_meta( get_the_ID(), '_movies_image', true) . '" class="img-responsive">
-                                <span class="label label-info date">'. get_post_meta( get_the_ID(), '_movies_name', true) .'</span>
+                                <img src="' . get_post_meta( get_the_ID(), '_movies_image', true) . '" class="img-responsive img-sm-center">
                              </div>
                             </div>
                          </a>';
@@ -128,7 +134,7 @@
             </div>
           </row>
           <row>
-            <div class="col-md-12">
+            <div class="col-md-12 text-sm-center">
               <h3>Synopsis</h3>
               <?php echo get_post_meta( get_the_ID(), '_movies_description', true) . '</br>'; ?>
             </div>
@@ -138,4 +144,4 @@
 
  <?php the_content(); ?>
 
-</div><!-- /.blog-post -->
+</div>

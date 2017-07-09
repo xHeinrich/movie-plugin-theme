@@ -257,3 +257,16 @@ h2.rating{
   height: 170px;
   width: auto;
 }
+.actor-img{
+  max-height: 100px;
+  width: auto;
+}
+//https://stackoverflow.com/questions/18602121/change-text-align-responsively-with-bootstrap-3
+@media (max-width: 768px) {
+  .text-sm-left { text-align: left; }
+  .text-sm-right { text-align: right; }
+  .text-sm-center { text-align: center; }
+  .text-sm-justify { text-align: justify; }
+  .div-sm-center {margin:0 auto;}
+  .img-sm-center {margin:0 auto;}
+}

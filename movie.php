@@ -6,6 +6,6 @@
 					get_template_part( 'content-movie', get_post_format() );
 				endwhile; endif;
 			?>
-		</div> <!-- /.col -->
-	</div> <!-- /.row -->
+		</div>
+	</div>
 <?php get_footer(); ?>

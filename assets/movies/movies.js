@@ -72,7 +72,7 @@ function movieStars(rating)
 function movieListTemplate(movie)
 {
   return '<a href="' + movie.link + '" class="list-group-item">' +
-        '<div class="media col-md-3">' +
+        '<div class="media col-md-2">' +
             '<figure class="pull-left">' +
               '<div class="movie-list-img">' +
                 '<img class="media-object img-responsive"  src="' + movie.image + '" alt="' + movie.image + '" >' +
@@ -84,7 +84,7 @@ function movieListTemplate(movie)
           '<h6 class="list-group-item-heading">' + movie.release_date.month + ', ' + movie.release_date.year + '</h4>' +
             '<p class="list-group-item-text">' + movie.description + '</p>' +
         '</div>' +
-        '<div class="col-md-3 text-center">' +
+        '<div class="col-md-4 text-center">' +
           '<button type="button" class="btn btn-default btn-md btn-block">View Details</button>' +
             '<h2 class="rating"> Rating </h2>' +
             '<div class="stars">' +

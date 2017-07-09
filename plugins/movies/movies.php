@@ -13,15 +13,11 @@
 define( 'MOVIE_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define( 'MOVIE_PLUGIN_URL', plugin_basename( __FILE__ ));
 
-/* Install sample data */
+/**
+ * Install the movie-list page to the base of the website
+ * @return void
+ */
 function movie_plugin_install_data() {
-  $movie = array(
-      'id' => NULL,
-      'order' => serialize($_POST['data']['Order']),
-      'created' => current_time('mysql', 1),
-      'user_id' => $current_user->ID
-  );
-  $wpdb->insert(ORDERS_TABLE, $data);
 }
 
 /**
@@ -162,7 +158,7 @@ function display_actor_meta_box() {
     'name' => esc_html__( 'Birth Date', 'cmb2' ),
     'desc' => esc_html__( 'Birth date of the actor', 'cmb2' ),
     'id'   => $prefix . 'birth_date',
-    'type' => 'text_date',
+    'type' => 'text_date_timestamp',
   ) );
 
   //actor biography
@@ -268,7 +264,7 @@ function display_movie_meta_box() {
     'name' => esc_html__( 'Release Date', 'cmb2' ),
     'desc' => esc_html__( 'The date the movie was released', 'cmb2' ),
     'id'   => $prefix . 'release_date',
-    'type' => 'text_date',
+    'type' => 'text_date_timestamp',
   ) );
 
 
@@ -380,6 +376,7 @@ function get_character_from_actor($movie_id, $actor_id)
  */
 function get_movies($genre, $order_by, $order, $page = 1, $query = '')
 {
+  //default setup for wp_query, 1 post per page
   $args = array(
       'post_type' => 'movie',
       's' => $query,
@@ -391,15 +388,28 @@ function get_movies($genre, $order_by, $order, $page = 1, $query = '')
           array(
               'taxonomy' => 'genre',
               'field'    => 'slug',
-              'terms'    => $genre,
+              'terms'    => explode(',', $genre),
           ),
       ),
   );
-  if($order_by != ""){
-    //$args['orderby'] = 'meta_value';
-    //$args['meta_key'] = $order_by;
+  //set up a meta query if we have a query string, search for the movie name
+  $meta_query = array();
+  if($query != ""){
+    $meta_args = array(
+      'key'     => '_movies_name',
+      'value'   => $query,
+      'compare' => 'LIKE',
+    );
+    $args['meta_query'] = $meta_query;
   }
+  //if we have a meta value we want to sort by, sort it by meta val num
+  if($order_by != ""){
+    $args['orderby'] = 'meta_value_num';
+    $args['meta_key'] = $order_by;
+ }
+ 
   $query = new WP_Query( $args);
+  //die(json_encode($query));
   return $query;
 }
 
@@ -492,8 +502,6 @@ function grab_movies_list() {
     return "Missing post information";
   }
   // setup inital query and execute it
-  $query = "";
-
   if($filter_by == "title"){
     $query = get_movies($genre, $order_by, $order, $page, $query);
   }elseif( $filter_by == "actor"){
@@ -510,10 +518,10 @@ function grab_movies_list() {
       'name' => $post->{_movies_name},
       'link' => get_permalink($post->ID),
       'release_date' => array(
-        'year' => date('Y', strtotime($post->{_movies_release_date})),
-        'month' => date('M', strtotime($post->{_movies_release_date})),
-        'day' => date('d', strtotime($post->{_movies_release_date})),
-        'raw' => strtotime($post->{_movies_release_date})
+        'year' => date('Y', $post->{_movies_release_date}),
+        'month' => date('M', $post->{_movies_release_date}),
+        'day' => date('d', $post->{_movies_release_date}),
+        'raw' => $post->{_movies_release_date}
       ),
       'characters' => $post->{_movies_characters},
       'actors' => json_encode(get_actors(get_characters($post->{_movies_characters}))->posts),

@@ -47,7 +47,25 @@ function movie_setup() {
     'audio',
     'chat',
   ) );
+
+  $movie_list_title = 'Movie List';
+  $movie_list_content = '';
+  $movie_list_check = get_page_by_title($movie_list_title);
+  $movie_list = array(
+    'post_type' => 'page',
+    'post_title' => $movie_list_title,
+    'post_content' => $movie_list_content,
+    'post_status' => 'publish',
+    'post_author' => 1,
+    'post_slug' => 'movie-list'
+  );
+  if(!isset($movie_list_check->ID)){
+      $movie_list_id = wp_insert_post($movie_list);
+  }
+  $movie_list_check = get_page_by_title($movie_list_title);
+  update_post_meta( $movie_list_check->ID, '_wp_page_template', 'movie-list.php' );
 }
+
 add_action( 'after_setup_theme', 'movie_setup' );
 
 function compile_scss() {
