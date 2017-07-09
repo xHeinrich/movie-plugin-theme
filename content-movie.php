@@ -11,77 +11,72 @@
 ?>
 <div class="movie-post">
   <div class="row">
-       <div class="col-md-5 push-md-1">
+       <div class="col-md-4 push-md-1">
             <img style="media-object img-responsive" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
             <div class="form-group">
                 &nbsp;
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-7">
             <h3><?php the_title(); ?></h3>
+            <h5><?php echo get_post_meta( get_the_ID(), '_movies_release_date', true) . '</br>'; ?></h5>
             <h4><?php
-                      echo get_post_meta( get_the_ID(), '_movies_release_date', true) . '</br>';
                       $terms = get_terms( array(
                             'taxonomy' => 'genre',
                             'hide_empty' => false,
                         ) );
                         $terms_list = array();
                         foreach($terms as $term){
-                          array_push($terms_list,$term->name);// $term->slug . '" selected="selected">' . $term->name . '(' . $term->count . ')</option>';
+                          array_push($terms_list,$term->name);
                         }
                         echo implode('/', $terms_list);
                         ?></small></h5>
               <row>
                 <div class="col-md-6" style="padding-left: 0px;">
-                  Rating
+                  <h4>
+                    Rating
+                  </h4>
                 </div>
                 <div class="col-md-6">
+                  <h4>
                   <?php echo get_post_meta( get_the_ID(), '_movies_rating', true) . '/10</br>'; ?>
+                  </h4>
                 </div>
               </row>
         </div>
+        <row>
+          <div class="form-group">
+              &nbsp;
+          </div>
+          <?php
+          /** get actor and chracter information for the movie **/
+          $characters = get_characters( implode(',', get_post_meta(get_the_ID(), '_movies_characters')));
+          $actors = get_actors($characters);
+          ?>
+          <div class="col-md-6">
+              <h3>Cast</h3>
+                <?php foreach($actors->posts as $actor){
+                  //actors portrait
+                  $portrait = get_post_meta( $actor->ID, '_actors_image', true);
+                  echo '<div class="col-md-12"><div class="col-md-3 ">';
+                  echo '<img class="media-object img-responsive img-circle" src="' . $portrait . '"/>';
+                  echo '</div>';
+                  echo '<div class="col-md-6 col-md-push-3">';
+                  echo '<p>' . get_post_meta($actor->ID, '_actors_name', true) . '</p>';
+                  echo '<p>' . get_character_from_actor(get_the_id(), $actor->ID) . '</p>';
+                  echo '</div></div>';
+                }
+                ?>
+
+              </div>
+          </div>
+        </row>
         <div class="form-group">
             &nbsp;
         </div>
         <div class="col-md-12">
           <!-- related movies and cast -->
-          <row>
-            <?php
-            //echo json_encode(get_post_meta(get_the_ID(), '_movies_characters'));
-            $characters = get_characters( implode(',', get_post_meta(get_the_ID(), '_movies_characters')));
-            $actors = get_actors($characters);
-            //die(json_encode($actors->post));
-            ?>
-            <div class="col-md-6">
 
-            </div>
-            <div class="col-md-6">
-              <row>
-                <h3>Cast</h3>
-                <div class="col-md-3 col-push-md3">
-                  <?php foreach($actors->posts as $actor){
-                    //actors portrait
-                    $portrait = get_post_meta( $actor->ID, '_actors_image', true);
-                    echo '<img class="media-object img-responsive img-circle" src="' . $portrait . '"/>';
-                  }
-                  ?>
-                </div>
-                <div class="col-md-6">
-                  <?php
-                  /**
-                    * Output all actors names and related role
-                  */
-                  foreach($actors->posts as $actor){
-                    $name = get_post_meta( $actor->ID, '_actors_name', true);
-                    echo '<p>' . $name . '</p>';
-                    echo '<p>' . get_character_from_actor(get_the_id(), $actor->ID) . '</p>';
-
-                  }
-                  ?>
-                </div>
-              </row>
-            </div>
-          </row>
           <row>
             <div class="col-md-12">
               <?php
@@ -122,7 +117,7 @@
 
                                <div class="boximg">
                                 <img src="' . get_post_meta( get_the_ID(), '_movies_image', true) . '" class="img-responsive">
-                                <span class="label label-danger date">'. get_post_meta( get_the_ID(), '_movies_name', true) .'</span>
+                                <span class="label label-info date">'. get_post_meta( get_the_ID(), '_movies_name', true) .'</span>
                              </div>
                             </div>
                          </a>';

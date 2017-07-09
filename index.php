@@ -14,24 +14,9 @@
  * @since movies 1.0
  */
 get_header(); ?>
-<div class="row">
-	<div class="col-sm-8 blog-main">
-    <?php
-      //if there are posts, while there are posts output the post
-      if ( have_posts() ) : while ( have_posts() ) : the_post();
-        get_template_part( 'content', get_post_format() );
-      endwhile;
-			?>
-			<nav>
-				<ul class="pager">
-					<li><?php next_posts_link( 'Previous' ); ?></li>
-					<li><?php previous_posts_link( 'Next' ); ?></li>
-				</ul>
-			</nav>
-		<?php
-		endif;
-    ?>
-	</div> <!-- /.blog-main -->
-  <?php get_sidebar(); ?>
-</div> 	<!-- /.row -->
+<div class="jumbotron">
+  <h1>Welcome to MovieDB!</h1>
+  <p>All your movie information is just a key press away.</p>
+  <p><a class="btn btn-primary btn-lg" href="" role="button">Explore</a></p>
+</div>
 <?php get_footer(); ?>

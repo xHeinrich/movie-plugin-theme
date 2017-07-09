@@ -2,12 +2,10 @@
 var genre = jQuery()
 jQuery(document).ready(function($) {
   $("#genres").select2();
-  console.log("ready");
   $('#select_search').on('change', function() {
     $("#search_box").attr("placeholder", "Search by " + $('#select_search').val());
   });
   $( "#search_button" ).click(function() {
-    console.log('search');
     getMovieInfo(1);
   });
   jQuery('#pagination').bootpag({
@@ -18,11 +16,9 @@ jQuery(document).ready(function($) {
   $('#movies').html(movieListNone);
   $( "select" ).change(function(){
     var value = $("#genres").select2("val");
-    console.log(value);
   });
   getMovieInfo(1);
 });
-
 
 function getMovieInfo(page)
 {
@@ -38,34 +34,20 @@ function getMovieInfo(page)
   };
 
   jQuery.post('/wp-admin/admin-ajax.php', data, function(response) {
-    console.log('postMovieInfo');
-    console.dir(response);
     jQuery('#movies').html(displayMovieInfo(response));
     jQuery('#pagination').bootpag({ total: parseInt( JSON.parse(response).max_pages) , maxVisible: 10});
-    console.log('________________________');
-    console.dir(JSON.parse(response).max_pages);
   });
-  console.log('getMovieInfo final');
-}
-
-function changePage(page)
-{
 }
 
 function displayMovieInfo(movies)
 {
-  console.log('displayMovieInfo');
   var movieInfo = "";
   if(typeof JSON.parse(movies).movies == "undefined"){
     movieListNone();
   }
   jQuery.each( JSON.parse(movies).movies, function( k, v ) {
-    console.log('testestsetset');
-    console.dir(v);
     movieInfo = movieInfo + movieListTemplate(v);
   });
-  console.log('displayMovieInfo final');
-  console.log(movieInfo);
   return movieInfo;
 }
 
@@ -89,12 +71,6 @@ function movieStars(rating)
 
 function movieListTemplate(movie)
 {
-  console.log('________________________________Movie_________________');
-  console.dir(movie);
-  console.log('___________________________END  Movie_________________');
-  var date =  new Date(+movie.release_date + 1000*3600);
-  console.dir(date.getMonth());
-  console.dir(movie.release_date);
   return '<a href="' + movie.link + '" class="list-group-item">' +
         '<div class="media col-md-3">' +
             '<figure class="pull-left">' +

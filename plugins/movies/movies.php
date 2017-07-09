@@ -8,13 +8,12 @@
  * Author URI: http://www.halfinity.com
  * License: GPL2
  * Text Domain: movie-plugin
-
-extra documentation here
 */
 
 define( 'MOVIE_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define( 'MOVIE_PLUGIN_URL', plugin_basename( __FILE__ ));
 
+/* Install sample data */
 function movie_plugin_install_data() {
   $movie = array(
       'id' => NULL,
@@ -25,6 +24,10 @@ function movie_plugin_install_data() {
   $wpdb->insert(ORDERS_TABLE, $data);
 }
 
+/**
+ * register the movie post type
+ * @return void
+ */
 function create_movie() {
     register_post_type( 'movie',
         array(
@@ -54,6 +57,10 @@ function create_movie() {
     );
 }
 
+/**
+ * Register the actor post type
+ * @return void
+ */
 function create_actor() {
     register_post_type( 'actor',
         array(
@@ -83,6 +90,10 @@ function create_actor() {
     );
 }
 
+/**
+ * Register the character post type
+ * @return Void
+ */
 function create_character() {
     register_post_type( 'character',
         array(
@@ -120,7 +131,11 @@ add_action( 'cmb2_admin_init', 'display_movie_meta_box' );
 add_action( 'cmb2_admin_init', 'display_character_meta_box' );
 add_action( 'cmb2_admin_init', 'display_actor_meta_box' );
 
-//disaply a metabox for actors in the admin panel
+/**
+ * Display the actors metabox in the actors post
+ * creation section in the admin panel
+ * @return void
+ */
 function display_actor_meta_box() {
   $prefix = '_actors_';
   //initialize a new instance of cmb2
@@ -142,7 +157,7 @@ function display_actor_meta_box() {
     'show_on_cb' => 'cmb2_hide_if_no_cats',
   ) );
 
-  //Release Date
+  //Birth Date
   $cmb->add_field( array(
     'name' => esc_html__( 'Birth Date', 'cmb2' ),
     'desc' => esc_html__( 'Birth date of the actor', 'cmb2' ),
@@ -168,9 +183,11 @@ function display_actor_meta_box() {
 
 }
 
-//display a metabox for character information
+/**
+ * display a metabox for character information in the character admin section
+ * @return void
+ */
 function display_character_meta_box() {
-
 
   $prefix = '_characters_';
   //initialize a new instance of the cmb2 class
@@ -212,7 +229,10 @@ function display_character_meta_box() {
 
 }
 
-//Display a metabox for movie information
+/**
+ * Display the movies metabox in the admin panel
+ * @return void
+ */
 function display_movie_meta_box() {
   /*
     :Name
@@ -297,7 +317,10 @@ function display_movie_meta_box() {
 
 add_action( 'init', 'create_genres_taxonomy' );
 
-//add a new taxonomy to the movie section called genre
+/**
+ * Register a taxonomy to the movie section called genre
+ * @return void
+ */
 function create_genres_taxonomy() {
     $labels = array(
       'name'                           => 'Genres',
@@ -326,6 +349,13 @@ function create_genres_taxonomy() {
 	);
 }
 
+/**
+ * Get a character name from an actor post id
+ * @param  integer $movie_id The id of the movie you want to get the character
+ * information for for a specific actor
+ * @param  integer $actor_id The actor which is playing the character
+ * @return string           The characters name that the actor is playing
+ */
 function get_character_from_actor($movie_id, $actor_id)
 {
   $posts = get_post_meta($movie_id, '_movies_characters', true);
@@ -339,6 +369,15 @@ function get_character_from_actor($movie_id, $actor_id)
   }
 }
 
+/**
+ * Get movies within a search criterion
+ * @param  string  $genre    A genre of movie e.g action
+ * @param  string  $order_by A field to order the search by
+ * @param  string  $order    Asc or Desc order
+ * @param  integer $page     The current page being viewed
+ * @param  string  $query    A query string to search the post by
+ * @return WP_Query          A WP_Query object containing the resulting output
+ */
 function get_movies($genre, $order_by, $order, $page = 1, $query = '')
 {
   $args = array(
@@ -364,8 +403,15 @@ function get_movies($genre, $order_by, $order, $page = 1, $query = '')
   return $query;
 }
 
+/**
+ * Find actors given a certain post id
+ * @param  String/WP_Query $posts A characters WP_Query object or string of
+ * post ids
+ * @return WP_Query        The resulting WP_Query object
+ */
 function get_actors($posts)
 {
+  //if the post info is a string of post ids
   if(is_string($posts)){
     $posts = explode(',', $posts);
     $args = array(
@@ -374,6 +420,7 @@ function get_actors($posts)
     );
     $query = new WP_Query( $args);
     return $query;
+  //otherwise its a wp_query object
   }else{
     $posts = explode(',', get_post_meta($posts->post->ID, '_characters_actors', true));// {_characters_actors});
     $args = array(
@@ -385,6 +432,11 @@ function get_actors($posts)
   }
 }
 
+/**
+ * Find characters given a string of post ids
+ * @param  String $posts A string of post ids joined by a comma
+ * @return WP_Query        The resulting WP_Query object
+ */
 function get_characters($posts)
 {
   if(is_string($posts) || is_int($posts)){
@@ -396,7 +448,6 @@ function get_characters($posts)
     $query = new WP_Query( $args);
     return $query;
   }else{
-    die(json_encode($posts));
     return "Error getting characters";
   }
 }
@@ -405,8 +456,12 @@ function get_characters($posts)
 add_action( 'wp_ajax_grab_movies_list', 'grab_movies_list' );
 add_action( 'wp_ajax_nopriv_grab_movies_list', 'grab_movies_list' );
 
+/**
+ * Process and return a JSON object containing a list of movies given post data
+ * to filter through results
+ * @return String Json encoded string containing a movie list
+ */
 function grab_movies_list() {
-
   global $wpdb;
 
   //post data from the client
@@ -434,7 +489,7 @@ function grab_movies_list() {
   }
 
   if(empty($genre) || empty($order_by) || empty($order) || empty($page)){
-    return "test";
+    return "Missing post information";
   }
   // setup inital query and execute it
   $query = "";
@@ -449,11 +504,11 @@ function grab_movies_list() {
   $return_data['max_pages'] = $query->max_num_pages;
   $return_data['movies'] = array();
   foreach($query->posts as $post){
+    //create the array to encode into json
     $data = array(
       'id' => $post->ID,
       'name' => $post->{_movies_name},
       'link' => get_permalink($post->ID),
-      //'genre' => $post->get_taxonomies(),
       'release_date' => array(
         'year' => date('Y', strtotime($post->{_movies_release_date})),
         'month' => date('M', strtotime($post->{_movies_release_date})),
