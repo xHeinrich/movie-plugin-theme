@@ -59,8 +59,13 @@ function movieListNone()
 function movieStars(rating)
 {
   var stars = "";
-  for(var i = 0; i < 11; i++){
-    if(i <= rating){
+  for(var i = 0; i < 10; i++){
+    if(i == 5)
+    {
+      //empty text
+      stars = stars + '<span>&nbsp;</span>';
+    }
+    if(i <= rating -1){
       stars = stars + '<span class="glyphicon glyphicon-star"></span>';
     }else{
       stars = stars + '<span class="glyphicon glyphicon-star-empty"></span>';
@@ -80,17 +85,17 @@ function movieListTemplate(movie)
             '</figure>' +
         '</div>' +
         '<div class="col-md-6">' +
-          '<h4 class="list-group-item-heading">' + movie.name + '</h4>' +
-          '<h6 class="list-group-item-heading">' + movie.release_date.month + ', ' + movie.release_date.year + '</h4>' +
+          '<h4 class="list-group-item-heading bold-thick italic">' + movie.name + '</h4>' +
+          '<h6 class="list-group-item-heading bold-thick italic">' + movie.release_date.month + ', ' + movie.release_date.year + '</h4>' +
             '<p class="list-group-item-text">' + movie.description + '</p>' +
         '</div>' +
         '<div class="col-md-4 text-center">' +
-          '<button type="button" class="btn btn-default btn-md btn-block">View Details</button>' +
             '<h2 class="rating"> Rating </h2>' +
             '<div class="stars">' +
               movieStars(movie.rating) +
             '</div>'+
-            '<p> Rated '+ movie.rating + ' <small> / </small> 10 </p>'+
+            '<p>'+ movie.rating + '<small> / </small> 10 </p>'+
+            '<button type="button" class="btn btn-default btn-md btn-block">View Details</button>' +
         '</div>'+
   '</a>';
 }

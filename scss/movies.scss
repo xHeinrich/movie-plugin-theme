@@ -21,9 +21,10 @@ $nemui-blue-1: #5c89b3;
 $nemui-blue-2: #6699cc;
 $sky-blue: #3e87f4;
 $light-blue: #00a4bc;
+$orange: #E85930;
 
 $button-hover: $grey;
-$nav-color: $curtain-red;
+$nav-color: $orange;
 $background-color: $black;
 $text-color: $light-grey;
 $footer-color: $light-grey;
@@ -32,7 +33,15 @@ $font-face: 'Raleway', sans-serif;
 body {
   font-family: $font-face;
   color: $text-color;
-  background: $background-color url('../images/bg.jpg') top center no-repeat;
+  background: linear-gradient(to bottom, $nav-color 0%,darken( $nav-color, 20% ) 100%) no-repeat; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background-color: darken( $nav-color, 20% );
+}
+.bold-thick{
+  font-family: $font-face;
+  font-weight: bold;
+}
+.italic{
+  font-style: italic;
 }
 html, body {
     height: 100%;
@@ -125,6 +134,7 @@ h6, .h6 {
 .navbar-movies{
   background-color: $nav-color;
   background-image: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .navbar-default .navbar-brand{
   color: $ultralight-blue;
@@ -256,15 +266,22 @@ h2.rating{
     vertical-align: middle;
     float: none;
 }
+.movie-poster{
+  box-shadow: 0 0.5em 1.5em 0 rgba(0, 0, 0, .2), 0 0.5em 0.5em 0 rgba(0, 0, 0, .14), 0 1em 0.5em -0.5em rgba(0, 0, 0, .12);
+}
 .movie-list-img{
-  height: 170px;
+  max-height: 170px;
   width: auto;
+  box-shadow: 0 0.5em 1.5em 0 rgba(0, 0, 0, .2), 0 0.5em 0.5em 0 rgba(0, 0, 0, .14), 0 1em 0.5em -0.5em rgba(0, 0, 0, .12),
+      0 -0.5em 1.5em 0 rgba(0, 0, 0, .4), 0 -0.5em 0.5em 0 rgba(0, 0, 0, .28), 0 -1em 0.5em -0.5em rgba(0, 0, 0, .24);
 }
 .actor-img{
   max-height: 100px;
   width: auto;
+  box-shadow: 0 0.5em 1.5em 0 rgba(0, 0, 0, .2), 0 0.5em 0.5em 0 rgba(0, 0, 0, .14), 0 1em 0.5em -0.5em rgba(0, 0, 0, .12);
 }
 //https://stackoverflow.com/questions/18602121/change-text-align-responsively-with-bootstrap-3
+.text-center { text-align: center; }
 @media (max-width: 768px) {
   .text-sm-left { text-align: left; }
   .text-sm-right { text-align: right; }
@@ -293,4 +310,24 @@ footer, .push {
   margin-bottom: 20px;
   padding: 20px 5px 20px 5px;
   border-radius: 2px;
+}
+.btn-orange{
+  background: $nav-color;
+  color: #FFF;
+  &:hover{
+    color: #FFF;
+  }
+  &:active{
+    color: #FFF;
+  }
+  &:visited{
+    color: #FFF;
+  }
+}
+.dropdown:hover{
+  color: #FFF;
+  background:darken( $nav-color, 10% )
+}
+.dropdown-menu-right{
+  color: $text-color;
 }

@@ -24,11 +24,11 @@
  * @subpackage movies
  * @since movies 1.0
  */
- define( 'THEME_DIR', get_template_directory() );
+define( 'THEME_DIR', get_template_directory() );
 
- require_once THEME_DIR . '/framework/init.php';
- require_once dirname( __FILE__ ) . '/plugins/cmb2/init.php';
- require_once dirname( __FILE__ ) . '/plugins/cmb2-post-search-field/lib/init.php';
+require_once THEME_DIR . '/framework/init.php';
+require_once dirname( __FILE__ ) . '/plugins/cmb2/init.php';
+require_once dirname( __FILE__ ) . '/plugins/cmb2-post-search-field/lib/init.php';
 
 function movie_setup() {
   //load plugin here
@@ -64,6 +64,8 @@ function movie_setup() {
   }
   $movie_list_check = get_page_by_title($movie_list_title);
   update_post_meta( $movie_list_check->ID, '_wp_page_template', 'movie-list.php' );
+
+
 }
 
 add_action( 'after_setup_theme', 'movie_setup' );
@@ -97,7 +99,7 @@ function movies_scripts() {
   wp_enqueue_style( 'bootstrap-theme', get_template_directory_uri() . '/framework/bootstrap/css/bootstrap-theme.min.css', array(), '1.0.0' );
   wp_enqueue_style( 'style', get_template_directory_uri() . '/style.css', array(), '1.0.0' );
   wp_enqueue_style( 'movies', get_template_directory_uri() . '/assets/movies/movies.css', array(), '1.0.0' );
-  wp_enqueue_style( 'raleway', 'https://fonts.googleapis.com/css?family=Raleway', array(), '1.0.0' );
+  wp_enqueue_style( 'raleway', 'https://fonts.googleapis.com/css?family=Raleway:400,700', array(), '1.0.0');
   wp_enqueue_style( 'select2', get_template_directory_uri() . '/framework/select2/select2.min.css', array(), '4.0.3' );
 
   //Javascript

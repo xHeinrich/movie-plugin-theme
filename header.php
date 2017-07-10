@@ -39,7 +39,7 @@
           </button>
           <div class="col-xs-3">
 
-          <a class="navbar-brand" href="<?php echo get_bloginfo( 'wpurl' );?>"><img src="<?php echo get_bloginfo('template_directory') . '/assets/images/logo.png'; ?>"/></a>
+          <a class="navbar-brand" href="<?php echo get_bloginfo( 'wpurl' );?>"><img src="<?php echo get_bloginfo('template_directory') . '/assets/images/logo-new.png'; ?>"/></a>
         </div>
       </div>
         <?php if ( has_nav_menu( 'primary' ) ) : ?>

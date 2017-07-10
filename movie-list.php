@@ -58,7 +58,7 @@ get_header(); ?>
                               </form>
                           </div>
                       </div>
-                      <button type="submit" class="btn btn-primary" id="search_button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                      <button type="submit" class="btn btn-orange" id="search_button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                   </div>
               </div>
           </div>

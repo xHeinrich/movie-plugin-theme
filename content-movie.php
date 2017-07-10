@@ -11,7 +11,7 @@
 ?>
   <div class="row content">
        <div class="col-md-5">
-            <img class="media-object img-responsive img-sm-center" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
+            <img class="media-object img-responsive img-sm-center movie-poster" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
             <div class="form-group">
                 &nbsp;
             </div>
@@ -48,7 +48,6 @@
                 </div>
               </row>
         </div>
-        <row>
           <div class="form-group">
               &nbsp;
           </div>
@@ -58,7 +57,7 @@
           $actors = get_actors($characters);
           ?>
           <div class="col-md-6 text-sm-center">
-              <h3>Cast</h3>
+              <h3 class="">Cast</h3>
                 <?php foreach($actors->posts as $actor){
                   //actors portrait
                   $portrait = get_post_meta( $actor->ID, '_actors_image', true);
@@ -80,8 +79,14 @@
         <div class="row content">
         <div class="col-md-12">
           <!-- related movies and cast -->
-
-          <row>
+          <div class="row">
+            <div class="col-md-12 text-sm-center">
+              <h3>Synopsis</h3>
+              <?php echo get_post_meta( get_the_ID(), '_movies_description', true) . '</br>'; ?>
+            </div>
+            <div class="form-group">
+                &nbsp;
+            </div>
             <div class="col-md-12 text-sm-center">
               <h3>Related Movies</h3>
               <?php
@@ -93,6 +98,7 @@
                   $taxonomy_names = get_object_taxonomies( $post );
                   $category = $taxonomy_names[0];
                   $custom_terms = get_terms($category);
+                  $current_post_id = get_the_ID();
                   foreach($custom_terms as $custom_term) {
                       wp_reset_query();
                       $args = array(
@@ -115,6 +121,9 @@
                        if($loop->have_posts()) {
 
                           while($loop->have_posts()) : $loop->the_post();
+                          if(get_the_id() == $current_post_id){
+                            continue;
+                          }
                           echo '
                           <a href="'.get_permalink().'" class="col-lg-3">
                             <div class="panel div-sm-center">
@@ -122,23 +131,18 @@
                                <div class="panel-body">
 
                                <div class="boximg">
-                                <img src="' . get_post_meta( get_the_ID(), '_movies_image', true) . '" class="img-responsive img-sm-center">
+                                <img src="' . get_post_meta( get_the_ID(), '_movies_image', true) . '" class="img-responsive img-sm-center movie-list-img">
                              </div>
                             </div>
                          </a>';
                           endwhile;
                        }
+                       return;
                   }
                   ?>
             </div>
-          </row>
-          <row>
-            <div class="col-md-12 text-sm-center">
-              <h3>Synopsis</h3>
-              <?php echo get_post_meta( get_the_ID(), '_movies_description', true) . '</br>'; ?>
-            </div>
-          </row>
-        </div>
+          </div>
+      </div>
     </div>
   </div>
  <?php the_content(); ?>
