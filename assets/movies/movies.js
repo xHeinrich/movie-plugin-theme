@@ -55,7 +55,7 @@ function displayMovieInfo(movies)
 {
   var movieInfo = "";
   if(typeof JSON.parse(movies).movies == "undefined"){
-    $('#movies').html(movieListNone());
+    jQuery('#movies').html(movieListNone());
   }
   jQuery.each( JSON.parse(movies).movies, function( k, v ) {
     movieInfo = movieInfo + movieListTemplate(v);
@@ -130,7 +130,7 @@ function movieListTemplate(movie)
  * render the pagination for a specific page
  * @param  int max_pages Max pages for the query
  * @param  int page      Current page for the query
- * @return void           
+ * @return void
  */
 function movieListPagination(max_pages, page)
 {
