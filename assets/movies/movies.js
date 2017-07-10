@@ -1,10 +1,13 @@
 //Global variables for page and movie info
 var genre = jQuery()
 jQuery(document).ready(function($) {
+  //initialize select2 box
   $("#genres").select2();
+  //change in the search box based on what you are looking for
   $('#select_search').on('change', function() {
     $("#search_box").attr("placeholder", "Search by " + $('#select_search').val());
   });
+  //on button click search for your query with the selected parameters
   $( "#search_button" ).click(function() {
     getMovieInfo(1);
   });
@@ -13,16 +16,20 @@ jQuery(document).ready(function($) {
   }).on('page', function(event, num){
     getMovieInfo(num);
   });
-  $('#movies').html(movieListNone);
   $( "select" ).change(function(){
     var value = $("#genres").select2("val");
   });
+  //grab default movie info to start with
   getMovieInfo(1);
 });
 
+/**
+ * Grab movie information from the wordpress ajax/JSON api
+ * @param  integer The page we want to grab from wordpress
+ * @return void
+ */
 function getMovieInfo(page)
 {
-  console.log('getMovieInfo');
   var data = {
     'action': 'grab_movies_list',
     'page' : page,
@@ -39,11 +46,16 @@ function getMovieInfo(page)
   });
 }
 
+/**
+ * [displayMovieInfo description]
+ * @param  Movie movies Movies json objet
+ * @return string       String of html to display movie info
+ */
 function displayMovieInfo(movies)
 {
   var movieInfo = "";
   if(typeof JSON.parse(movies).movies == "undefined"){
-    movieListNone();
+    $('#movies').html(movieListNone());
   }
   jQuery.each( JSON.parse(movies).movies, function( k, v ) {
     movieInfo = movieInfo + movieListTemplate(v);
@@ -51,11 +63,20 @@ function displayMovieInfo(movies)
   return movieInfo;
 }
 
+/**
+ * Disaply could not find any movies if no movies are found
+ * @return void
+ */
 function movieListNone()
 {
-  return '<a href="#" class="list-group-item"><div class="col-md-12 text-center vcenter"> Search for a movie</div></a>'
+  return '<a href="#" class="list-group-item"><div class="col-md-12 text-center vcenter"> Could not find any movies</div></a>'
 }
 
+/**
+ * Display the correct number of stars for a movie
+ * @param  int rating Rating of the movie out of 10
+ * @return string       Html containing the output of the stars
+ */
 function movieStars(rating)
 {
   var stars = "";
@@ -74,6 +95,11 @@ function movieStars(rating)
   return stars;
 }
 
+/**
+ * Render the movie list tempalte
+ * @param  array movie Json object containing a single movie
+ * @return string       A single movie listing
+ */
 function movieListTemplate(movie)
 {
   return '<a href="' + movie.link + '" class="list-group-item">' +
@@ -100,6 +126,12 @@ function movieListTemplate(movie)
   '</a>';
 }
 
+/**
+ * render the pagination for a specific page
+ * @param  int max_pages Max pages for the query
+ * @param  int page      Current page for the query
+ * @return void           
+ */
 function movieListPagination(max_pages, page)
 {
   // init bootpag

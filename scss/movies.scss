@@ -326,8 +326,22 @@ footer, .push {
 }
 .dropdown:hover{
   color: #FFF;
-  background:darken( $nav-color, 10% )
+  background:darken( $nav-color, 10% );
 }
 .dropdown-menu-right{
   color: $text-color;
+}
+.pagination>.active>a, .pagination>.active>a:focus,
+.pagination>.active>a:hover, .pagination>.active>span,
+.pagination>.active>span, .pagination>.active>span {
+  background: darken( $nav-color, 10% );
+  border-color: darken( $nav-color, 10% );
+  &:hover{
+    background: darken( $nav-color, 10% );
+    border-color: darken( $nav-color, 10% );
+  }
+  &:focus{
+    background: darken( $nav-color, 10% );
+    border-color: darken( $nav-color, 10% );
+  }
 }
