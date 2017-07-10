@@ -96,7 +96,6 @@ function compile_scss() {
 function movies_scripts() {
   //Styles
   wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/framework/bootstrap/css/bootstrap.min.css', array(), '3.3.7' );
-  wp_enqueue_style( 'bootstrap-theme', get_template_directory_uri() . '/framework/bootstrap/css/bootstrap-theme.min.css', array(), '1.0.0' );
   wp_enqueue_style( 'style', get_template_directory_uri() . '/style.css', array(), '1.0.0' );
   wp_enqueue_style( 'movies', get_template_directory_uri() . '/assets/movies/movies.css', array(), '1.0.0' );
   wp_enqueue_style( 'raleway', 'https://fonts.googleapis.com/css?family=Raleway:400,700', array(), '1.0.0');
