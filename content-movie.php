@@ -9,9 +9,8 @@
  * @since movies 1.0
  */
 ?>
-<div class="movie-post">
-  <div class="row">
-       <div class="col-md-4">
+  <div class="row content">
+       <div class="col-md-5">
             <img class="media-object img-responsive img-sm-center" src="<?php echo get_post_meta( get_the_ID(), '_movies_image', true); ?>" />
             <div class="form-group">
                 &nbsp;
@@ -75,10 +74,10 @@
 
               </div>
           </div>
-        </row>
         <div class="form-group">
             &nbsp;
         </div>
+        <div class="row content">
         <div class="col-md-12">
           <!-- related movies and cast -->
 
@@ -141,7 +140,5 @@
           </row>
         </div>
     </div>
-
+  </div>
  <?php the_content(); ?>
-
-</div>

@@ -19,4 +19,5 @@ get_header(); ?>
   <p>All your movie information is just a key press away.</p>
   <p><a class="btn btn-primary btn-lg" href="<?php echo get_permalink(get_page_by_title('Movie List')->ID); ?>" role="button">Explore</a></p>
 </div>
+<div class="push"></div>
 <?php get_footer(); ?>

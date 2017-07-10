@@ -372,17 +372,115 @@ function get_character_from_actor($movie_id, $actor_id)
  * @param  string  $order    Asc or Desc order
  * @param  integer $page     The current page being viewed
  * @param  string  $query    A query string to search the post by
+ * @param  string  $in       A list of movies to search for
+ * @return array            A list of movies the actor appears in
+ */
+function get_actors_by_name($query = '')
+{
+  $movies_list = array();
+  $actors_list = array();
+  $characters_list = array();
+
+  //grab all actors that have a name similar to the query string
+  $actor_args = array(
+    'post_type' => 'actor',
+    'posts_per_page' => -1,
+    'nopaging' => true,
+    's' => $query,
+    'meta_query' => array(
+      'key'     => '_actors_name',
+      'value'   => $query,
+      'compare' => 'LIKE',
+    ),
+  );
+  $actor_query = new WP_Query( $actor_args);
+
+  //add all actors ids to an array
+  foreach($actor_query->posts as $post){
+    array_push($actors_list, $post->ID);
+  }
+  $actors_list = array_unique($actors_list);
+
+  //loop over the actors array to find all characters for the actor
+  foreach($actors_list as $actor)
+  {
+    $character_args = array(
+      'post_type' => 'character',
+      'posts_per_page' => -1,
+      'nopaging' => true,
+      'meta_query' => array(
+        'key'     => '_characters_actors',
+        'value'   => $actor,
+        'compare' => 'LIKE',
+      ),
+    );
+
+    $character_query = new WP_Query($character_args);
+
+    //add all the characters to an array making sure that they are valid
+    foreach($character_query->posts as $post)
+    {
+      $characters = explode(',', $post->{_characters_actors});
+      foreach($characters as $actor_test)
+      {
+        if($actor == $actor_test)
+        {
+          array_push($characters_list, $post->ID);
+        }
+      }
+    }
+
+    $characters_list = array_unique($characters_list);
+  }
+  //loop over the characters list for each movie and see if the character is in the movie
+  foreach($characters_list as $character)
+  {
+    $movie_args = array(
+      'post_type' => 'movie',
+      'posts_per_page' => -1,
+      'nopaging' => true,
+      'meta_query' => array(
+        'key' => '_movies_characters',
+        'value' => $character,
+        'compare' => 'LIKE',
+      ),
+    );
+
+    $movie_query = new WP_Query($movie_args);
+
+    foreach($movie_query->posts as $post)
+    {
+      $characters = explode(',',$post->{_movies_characters});
+      foreach($characters as $character_test){
+        if($character_test == $character)
+        {
+          array_push($movies_list, $post->ID);
+        }
+      }
+    }
+  }
+  $movies_list = array_unique($movies_list);
+  return $movies_list;
+}
+
+/**
+ * Get movies within a search criterion
+ * @param  string  $genre    A genre of movie e.g action
+ * @param  string  $order_by A field to order the search by
+ * @param  string  $order    Asc or Desc order
+ * @param  integer $page     The current page being viewed
+ * @param  string  $query    A query string to search the post by
+ * @param  string  $in       A list of movies to search for
  * @return WP_Query          A WP_Query object containing the resulting output
  */
-function get_movies($genre, $order_by, $order, $page = 1, $query = '')
+function get_movies($genre, $order_by, $order, $page = 1, $query = '', $in = '')
 {
   //default setup for wp_query, 1 post per page
   $args = array(
       'post_type' => 'movie',
-      's' => $query,
       'order'   => $order,
       'orderby' => $order_by,
-      'posts_per_page' => 1,
+      'posts_per_page' => 4,
       'paged' => $page,
       'tax_query' => array(
           array(
@@ -395,6 +493,7 @@ function get_movies($genre, $order_by, $order, $page = 1, $query = '')
   //set up a meta query if we have a query string, search for the movie name
   $meta_query = array();
   if($query != ""){
+    $args['s'] = $query;
     $meta_args = array(
       'key'     => '_movies_name',
       'value'   => $query,
@@ -407,9 +506,11 @@ function get_movies($genre, $order_by, $order, $page = 1, $query = '')
     $args['orderby'] = 'meta_value_num';
     $args['meta_key'] = $order_by;
  }
- 
+ if($in != ''){
+   $args['post__in'] = (array)$in;
+ }
+
   $query = new WP_Query( $args);
-  //die(json_encode($query));
   return $query;
 }
 
@@ -505,9 +606,7 @@ function grab_movies_list() {
   if($filter_by == "title"){
     $query = get_movies($genre, $order_by, $order, $page, $query);
   }elseif( $filter_by == "actor"){
-    //TODO: filter by actor name
-    return "0";
-    wp_die();
+    $query = get_movies($genre, $order_by, $order, $page, '', get_actors_by_name($query));
   }
   $return_data['max_pages'] = $query->max_num_pages;
   $return_data['movies'] = array();

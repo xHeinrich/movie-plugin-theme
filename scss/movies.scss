@@ -8,6 +8,7 @@
 
 $warm-yellow: #EAC67A;
 $rusty-red: #984B43;
+$curtain-red: #ba0808;
 $black: #000000;
 $dark-grey: #2c2c2c;
 $navy-blue: #18121E;
@@ -22,8 +23,8 @@ $sky-blue: #3e87f4;
 $light-blue: #00a4bc;
 
 $button-hover: $grey;
-$nav-color: $sky-blue;
-$background-color: $grey-white;
+$nav-color: $curtain-red;
+$background-color: $black;
 $text-color: $light-grey;
 $footer-color: $light-grey;
 $nav-text-color: $grey-white;
@@ -31,8 +32,10 @@ $font-face: 'Raleway', sans-serif;
 body {
   font-family: $font-face;
   color: $text-color;
-  background-color: $background-color;
-  background-image: none;
+  background: $background-color url('../images/bg.jpg') top center no-repeat;
+}
+html, body {
+    height: 100%;
 }
 h1, .h1,
 h2, .h2,
@@ -113,7 +116,7 @@ h6, .h6 {
   padding: 40px 0;
   color: $text-color;
   text-align: center;
-  background-color: $background-color;
+  background-color: $grey-white;
   border-top: 1px solid #18121E;
 }
 .movie-footer p:last-child {
@@ -269,4 +272,25 @@ h2.rating{
   .text-sm-justify { text-align: justify; }
   .div-sm-center {margin:0 auto;}
   .img-sm-center {margin:0 auto;}
+}
+.panel {
+  background: none;
+}
+footer, .push {
+    height: 75px; /* .push must be the same height as .footer */
+}
+.container {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+.movie-footer{
+  padding-top:10px;
+}
+.content{
+  background-image: linear-gradient(to bottom,#e8e8e8 0,#f5f5f5 100%);//same as a bootstrap well
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 20px 5px 20px 5px;
+  border-radius: 2px;
 }
